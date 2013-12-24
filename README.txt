@@ -1,0 +1,4 @@
+- Avant d'afficher le formulaire pour poser une question
+- L'utilisateur a une zone de texte pour lancer une recherche
+- En autocomplete comme dans le bug tracker de Facebook, il reçoit les questions/réponses correspondant à sa recherche dans Self service.
+- Si y'a rien qui l'excite, en bas du truc d'autocomplete il a un bouton pour poser une question comme "create a new bug" et on rentre dans le workflow traditionnel de Facebook Portal
