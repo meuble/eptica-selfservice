@@ -24,6 +24,16 @@ class EpticaAPI
     self
   end
 
+  def document(id)
+    @document = "/document/#{id}"
+    self
+  end
+
+  def content
+    @content = "/content"
+    self
+  end
+
   def search(query)
     if !query.nil? && query != ""
       @search = "/search"
@@ -41,7 +51,7 @@ class EpticaAPI
   end
 
   def path
-    "#{@configurations}#{@document_groups}#{@search}"
+    "#{@configurations}#{@document_groups}#{@document}#{@content}#{@search}"
   end
 
   def options
@@ -49,11 +59,10 @@ class EpticaAPI
   end
 
   def fetch
-    r = self.class.get(self.path, self.options)
-    r = JSON.parse(r)
+    r = self.class.get(self.path, :query => self.options)
     if r["code"]
       raise APIError.new("#{r["code"]}(#{r["status"]}): #{r["message"]}")
     end
-    r['elements']
+    r['elements'] || r
   end
 end

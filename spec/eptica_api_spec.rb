@@ -51,7 +51,7 @@ describe EpticaAPI do
     end
   end
 
-  describe "#document_groups" do
+  describe "#search" do
     it 'should build a path for the given document group' do
       eapi = EpticaAPI.new
       r = eapi.search('zorblub')
@@ -67,6 +67,41 @@ describe EpticaAPI do
     it 'should return self to be chainable' do
       eapi = EpticaAPI.new
       r = eapi.search('zorblub')
+      r.should == eapi
+    end
+  end
+
+  describe "#document" do
+    it 'should build a path for the given document' do
+      eapi = EpticaAPI.new
+      eapi.document(21)
+      eapi.path.should == "/document/21"
+    end
+
+    it 'should require an id' do
+      eapi = EpticaAPI.new
+      lambda do
+        eapi.document()
+      end.should raise_error
+    end
+
+    it 'should return self to be chainable' do
+      eapi = EpticaAPI.new
+      r = eapi.document(21)
+      r.should == eapi
+    end
+  end
+
+  describe "#content" do
+    it 'should build a path for the given document' do
+      eapi = EpticaAPI.new
+      eapi.content
+      eapi.path.should == "/content"
+    end
+
+    it 'should return self to be chainable' do
+      eapi = EpticaAPI.new
+      r = eapi.document(21)
       r.should == eapi
     end
   end
@@ -119,13 +154,13 @@ describe EpticaAPI do
 
   describe "#fetch" do
     it 'should get from base_uri' do
-      EpticaAPI.should_receive(:get).with('/configuration', {:offset => 0, :pageSize => 10, :query => nil}).and_return('{}')
+      EpticaAPI.should_receive(:get).with('/configuration', :query => {:offset => 0, :pageSize => 10, :query => nil}).and_return('{}')
       eapi = EpticaAPI.new
       r = eapi.configurations.fetch
     end
 
     it "should parse json and return elements" do
-      EpticaAPI.should_receive(:get).with('/configuration', {:offset => 0, :pageSize => 10, :query => nil}).and_return('{"pager":{"offset":0,"pageSize":10},"elements":[{"id":"brand1","uri":"/selfdemoavv/api/configuration/brand1"},{"id":"securitasdirect","uri":"/selfdemoavv/api/configuration/securitasdirect"},{"id":"selfdemoavv","uri":"/selfdemoavv/api/configuration/selfdemoavv"},{"id":"sport7","uri":"/selfdemoavv/api/configuration/sport7"}]}')
+      EpticaAPI.should_receive(:get).with('/configuration', :query => {:offset => 0, :pageSize => 10, :query => nil}).and_return({"pager" => {"offset" => 0,"pageSize" => 10},"elements" => [{"id" => "brand1","uri" => "/selfdemoavv/api/configuration/brand1"},{"id" => "securitasdirect","uri" => "/selfdemoavv/api/configuration/securitasdirect"},{"id" => "selfdemoavv","uri" => "/selfdemoavv/api/configuration/selfdemoavv"},{"id" => "sport7","uri" => "/selfdemoavv/api/configuration/sport7"}]})
       eapi = EpticaAPI.new
       r = eapi.configurations.fetch
       r.should == [{"id" => "brand1","uri" => "/selfdemoavv/api/configuration/brand1"},
@@ -135,7 +170,7 @@ describe EpticaAPI do
     end
     
     it "should raise if api error" do
-      EpticaAPI.should_receive(:get).with('/configuration', {:offset => 0, :pageSize => 10, :query => nil}).and_return('{ "status" : 404, "code" : "EPTICA_ERR_RESOURCE_NOT_FOUND", "message" : "There is no resource for path : /selfdemoavv/api/configurations/" }')
+      EpticaAPI.should_receive(:get).with('/configuration', :query => {:offset => 0, :pageSize => 10, :query => nil}).and_return({"status" => 404, "code" => "EPTICA_ERR_RESOURCE_NOT_FOUND", "message" => "There is no resource for path : /selfdemoavv/api/configurations/"})
       eapi = EpticaAPI.new
       lambda do
         r = eapi.configurations.fetch
