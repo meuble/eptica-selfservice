@@ -8,7 +8,7 @@ $(function() {
     resultUl.empty('');
     if (data.response) {
       $.each(data.response, function(i, e) {
-        resultUl.append('<li><a href="/document/' + e.id + '">' + e.names[0].name + '</a></li>');
+        resultUl.append('<li><a href="/documents/' + e.id + '">' + e.names[0].name + '</a></li>');
       });
     }
     result.show();
