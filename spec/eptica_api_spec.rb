@@ -51,6 +51,26 @@ describe EpticaAPI do
     end
   end
 
+  describe "#document_groups" do
+    it 'should build a path for the given document group' do
+      eapi = EpticaAPI.new
+      r = eapi.search('zorblub')
+      eapi.path.should == "/search"
+    end
+
+    it 'should build options with query' do
+      eapi = EpticaAPI.new
+      eapi.search('zorblub')
+      eapi.options[:query].should == 'zorblub'
+    end
+
+    it 'should return self to be chainable' do
+      eapi = EpticaAPI.new
+      r = eapi.search('zorblub')
+      r.should == eapi
+    end
+  end
+
   describe "#offset" do
     it 'should build option for the given offset' do
       eapi = EpticaAPI.new

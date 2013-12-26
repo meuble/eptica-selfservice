@@ -25,8 +25,11 @@ class EpticaAPI
   end
 
   def search(query)
-    @search = "/search"
-    @query = query
+    if !query.nil? && query != ""
+      @search = "/search"
+      @query = query
+    end
+    self
   end
 
   def offset(value = 0)

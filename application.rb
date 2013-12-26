@@ -11,10 +11,13 @@ end
 get '/data' do
   callback = params.delete('callback') || 'callback'
   pattern = params.delete('pattern')
-  if pattern
-    json = "{'response':['réponse 1 : #{pattern}', 'réponse 2 : #{pattern}', 'réponse 3 : #{pattern}', 'réponse 4 : #{pattern}']}"
-  else
-    json = "{'response':[]}"
+  eapi = EpticaAPI.new
+
+  begin
+    data = eapi.configurations('sport7').document_groups(21).search(pattern).fetch
+    json = {:response => data}.to_json
+  rescue EpticaAPI::APIError => e
+    json = {:error => e.message}.to_json
   end
 
   content_type :js
